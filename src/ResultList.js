@@ -1,0 +1,1 @@
+import ResultItem from './ResultItem';
