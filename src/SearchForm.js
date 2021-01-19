@@ -8,13 +8,30 @@ const APIKey = "AIzaSyCxiACOeV_8l43G3P5R1Pt6DPXxbqtlbb4";
 
 //"https://www.googleapis.com/books/v1/volumes?q=harry+potter&key=APIKey"
 
-let fetchBooks = (title) => {
+let fetchBooks = (searchTerms) => {
   //call api. search for book by title
   //store results in state
-  console.log(title)
-  const searchURL = `https://www.googleapis.com/books/v1/volumes?q=${title}&key=${APIKey}`
+  console.log(searchTerms)
+  const title = searchTerms.title;
+  const printType = searchTerms.print;
+  const filter = searchTerms.book
 
-  fetch(searchURL)
+  let requestURL = `https://www.googleapis.com/books/v1/volumes?`;
+
+  if(title.length > 0 ){
+    requestURL += `q=${title}`;
+  }
+  if(printType.length > 0){
+    requestURL += `&printType=${printType}`;
+  }
+  if(filter.length > 0){
+    requestURL += `&filter=${filter}`;
+  }
+  requestURL += `&key=${APIKey}`
+
+  console.log(requestURL);
+
+  fetch(requestURL)
   .then(response => response.json())
   .then(data => {
     
@@ -43,9 +60,9 @@ class SearchForm extends Component{
   }
 
   handleSubmit = (event) => {
-    console.log(this.state.title);
+    console.log(this.state);
     event.preventDefault();
-    fetchBooks(this.state.title);
+    fetchBooks(this.state);
   }
 
   render(){
@@ -74,7 +91,7 @@ class SearchForm extends Component{
       <select  
         id="printType" 
         name="printType" 
-        onChange = {e => this.handlePrintChange(e.target.value)}>
+        onChange = {e => this.handlePrintChange}>
         <option value="ALL" >ALL</option>
         <option value="BOOKS" >BOOKS</option>
         <option value="MAGAZINES" >MAGAZINES</option>
@@ -85,7 +102,7 @@ class SearchForm extends Component{
         id="bookType" 
         name="bookType" 
         value = {this.state.book}
-        onChange = {e => this.handleBookChange(e.target.value)}>
+        onChange = {e => this.handleBookChange}>
         <option value="">ALL</option>
         <option value="ebooks">ebooks</option>
         <option value="free-ebooks">free-ebooks</option>
