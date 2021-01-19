@@ -15,25 +15,31 @@ let fetchBooks = (title) => {
   const searchURL = `https://www.googleapis.com/books/v1/volumes?q=${title}&key=${APIKey}`
 
   fetch(searchURL)
-    .then(res => {
-      if(!res.ok) {
-        throw new Error('Something went wrong, please try again later');
-      }
-      return res.json();
-    })
-    .catch(console.log("something broke"))
-
+  .then(response => response.json())
+  .then(data => {
+    
+    console.log(data);
+  })
+  .catch(console.log("something broke"));
 };
 
 
 class SearchForm extends Component{
   state = {
-    title:""
+    title:"",
+    print:"",
+    book:""
   }
 
-  handleChange = (event) => {
+  handleTitleChange = (event) => {
     this.setState({title: event.target.value})
     
+  }
+  handlePrintChange = (event) => {
+    this.setState({print: event.target.value})
+  }
+  handleBookChange = (event) => {
+    this.setState({book: event.target.value})
   }
 
   handleSubmit = (event) => {
@@ -54,7 +60,7 @@ class SearchForm extends Component{
       placeholder="Permutation City" 
       required
       value = {this.state.title}
-      onChange = {this.handleChange}
+      onChange = {this.handleTitleChange}
       >
       </input>
       <button type="submit" 
@@ -64,7 +70,29 @@ class SearchForm extends Component{
       onClick = {this.handleSubmit}
       >Search</button>
       {/*Print menu */}
+      <label title="printType">Print Type</label>
+      <select  
+        id="printType" 
+        name="printType" 
+        onChange = {e => this.handlePrintChange(e.target.value)}>
+        <option value="ALL" >ALL</option>
+        <option value="BOOKS" >BOOKS</option>
+        <option value="MAGAZINES" >MAGAZINES</option>
+      </select>
       {/*Book type menu */}
+      <label title="bookType">Book Type</label>
+      <select 
+        id="bookType" 
+        name="bookType" 
+        value = {this.state.book}
+        onChange = {e => this.handleBookChange(e.target.value)}>
+        <option value="">ALL</option>
+        <option value="ebooks">ebooks</option>
+        <option value="free-ebooks">free-ebooks</option>
+        <option value="full">full</option>
+        <option value="paid-ebooks">paid ebooks</option>
+        <option value="partial">partial</option>
+      </select>
 
     </form>
     )
