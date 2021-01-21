@@ -1,8 +1,17 @@
+import React from 'react';
+import { render } from '@testing-library/react';
 import ResultList from './ResultList';
 
-function DisplayResults(props){
+function DisplayResults({results=[]}){
+
   return(
-    "Results"
+    <div>
+        {results.map((result) => 
+          <p>{result.items}</p>
+
+        )}
+    </div>      
+    
   )
 
 }

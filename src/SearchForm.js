@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import DisplayResults from './DisplayResults';
 
 //Search field with button
 //Print Type menu selection
@@ -8,7 +9,16 @@ const APIKey = "AIzaSyCxiACOeV_8l43G3P5R1Pt6DPXxbqtlbb4";
 
 //"https://www.googleapis.com/books/v1/volumes?q=harry+potter&key=APIKey"
 
-let fetchBooks = (searchTerms) => {
+
+class SearchForm extends Component{
+  state = {
+    title:"",
+    print:"",
+    book:"",
+    results:[]
+  }
+
+fetchBooks = (searchTerms) => {
   //call api. search for book by title
   //store results in state
   console.log(searchTerms)
@@ -34,19 +44,12 @@ let fetchBooks = (searchTerms) => {
   fetch(requestURL)
   .then(response => response.json())
   .then(data => {
-    
+    this.setState({results: data})
+  
     console.log(data);
   })
-  .catch(console.log("something broke"));
+  .catch(()=>console.log("something broke"));
 };
-
-
-class SearchForm extends Component{
-  state = {
-    title:"",
-    print:"",
-    book:""
-  }
 
   handleTitleChange = (event) => {
     this.setState({title: event.target.value})
@@ -62,12 +65,13 @@ class SearchForm extends Component{
   handleSubmit = (event) => {
     console.log(this.state);
     event.preventDefault();
-    fetchBooks(this.state);
+    this.fetchBooks(this.state);
   }
 
   render(){
-
+    console.log(this.state.results)
     return(
+    <div>
     <form>
       <label title="title">Title</label>
       <input 
@@ -91,7 +95,7 @@ class SearchForm extends Component{
       <select  
         id="printType" 
         name="printType" 
-        onChange = {e => this.handlePrintChange}>
+        onChange = {this.handlePrintChange}>
         <option value="ALL" >ALL</option>
         <option value="BOOKS" >BOOKS</option>
         <option value="MAGAZINES" >MAGAZINES</option>
@@ -102,7 +106,7 @@ class SearchForm extends Component{
         id="bookType" 
         name="bookType" 
         value = {this.state.book}
-        onChange = {e => this.handleBookChange}>
+        onChange = {this.handleBookChange}>
         <option value="">ALL</option>
         <option value="ebooks">ebooks</option>
         <option value="free-ebooks">free-ebooks</option>
@@ -112,6 +116,8 @@ class SearchForm extends Component{
       </select>
 
     </form>
+      <DisplayResults results={this.state.results}/>
+    </div>
     )
   }
 
